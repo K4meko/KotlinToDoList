@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -37,7 +38,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.todolist.ui.theme.ToDoListTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,26 +51,33 @@ fun HomeView() {
     var isSheetOpen by remember { mutableStateOf(false) }
 
 
-    Column {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp)
+        ) {
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(top = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically) {
             Text(text = "Welcome to your To-Do List!",
-                style = TextStyle(fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+                style = TextStyle(fontSize = 24.sp,
                     fontWeight = FontWeight(700),
                 ))
             IconButton(onClick = {isSheetOpen = true},
                 modifier = Modifier
                     .clip(CircleShape) // This will make the button circular
                     .background(Color.Cyan)
+
+
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Add item")
             }
         }
         if (viewModel.items.isEmpty()) {
-            Text(text = "You have no items in your list!")
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(text = "You have no items in your list :(")
+            Text(text = "Add a new item by clicking the button above!")
         } else {
             viewModel.items.forEach {
                 ListItem(text = it.task)
@@ -76,11 +86,16 @@ fun HomeView() {
     }
     if (isSheetOpen) {
         ModalBottomSheet(onDismissRequest = {isSheetOpen = false}, sheetState = sheetState, modifier = Modifier.height(400.dp)) {
-          Column(Modifier.padding(16.dp).fillMaxWidth()) {
+          Column(
+              Modifier
+                  .padding(16.dp)
+                  .fillMaxWidth()) {
               TextField(
                   value = viewModel.newtask.value,
                   onValueChange = { viewModel.changeTask(it) },
-                  modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                  modifier = Modifier
+                      .fillMaxWidth()
+                      .padding(bottom = 16.dp)
 
 
                       .background(Color.Transparent),
@@ -94,7 +109,8 @@ fun HomeView() {
                   viewModel.addItem(viewModel.newtask.value)
                   isSheetOpen = false
               }
-                  , modifier = Modifier.fillMaxWidth()
+                  , modifier = Modifier
+                      .fillMaxWidth()
 
                       .clip(RoundedCornerShape(12.dp))) {
                     Text("Add item")
@@ -105,3 +121,10 @@ fun HomeView() {
 
 
     }
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun GreetingPreview() {
+    ToDoListTheme {
+        HomeView()
+    }
+}
