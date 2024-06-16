@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -67,17 +68,18 @@ fun HomeView() {
             IconButton(onClick = {isSheetOpen = true},
                 modifier = Modifier
                     .clip(CircleShape) // This will make the button circular
-                    .background(Color.Cyan)
+                    .background(Color(0xFFc99395))
+
 
 
             ) {
-                Icon(Icons.Filled.Add, contentDescription = "Add item")
+                Icon(Icons.Filled.Add, contentDescription = "Add item", tint = MaterialTheme.colorScheme.background)
             }
         }
         if (viewModel.items.isEmpty()) {
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "You have no items in your list :(")
-            Text(text = "Add a new item by clicking the button above!")
+            Text(text = "Add a new item by clicking the button above!", modifier = Modifier.padding(top = 20.dp))
         } else {
             viewModel.items.forEach {
                 ListItem(text = it.task)
