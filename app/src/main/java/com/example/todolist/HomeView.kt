@@ -1,17 +1,22 @@
 package com.example.todolist
 
+import android.widget.ScrollView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -53,6 +58,7 @@ fun HomeView() {
 
 
     Column(modifier = Modifier
+        .fillMaxHeight()
         .fillMaxWidth()
         .padding(16.dp)
         ) {
@@ -60,7 +66,8 @@ fun HomeView() {
             .fillMaxWidth()
             .padding(top = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically) {
+            verticalAlignment = Alignment.CenterVertically)
+        {
             Text(text = "Welcome to your To-Do List!",
                 style = TextStyle(fontSize = 24.sp,
                     fontWeight = FontWeight(700),
@@ -68,7 +75,7 @@ fun HomeView() {
             IconButton(onClick = {isSheetOpen = true},
                 modifier = Modifier
                     .clip(CircleShape) // This will make the button circular
-                    .background(Color(0xFFc99395))
+                    .background(MaterialTheme.colorScheme.primary)
 
 
 
@@ -81,17 +88,26 @@ fun HomeView() {
             Text(text = "You have no items in your list :(")
             Text(text = "Add a new item by clicking the button above!", modifier = Modifier.padding(top = 20.dp))
         } else {
-            viewModel.items.forEach {
-                ListItem(text = it.task)
+            Column(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start, // Align items to the left
+                modifier = Modifier.fillMaxHeight().verticalScroll(rememberScrollState())
+            ) {
+                viewModel.items.forEach {
+                    ListItem(text = it.task)
+                }
             }
         }
     }
     if (isSheetOpen) {
-        ModalBottomSheet(onDismissRequest = {isSheetOpen = false}, sheetState = sheetState, modifier = Modifier.height(400.dp)) {
+        ModalBottomSheet(onDismissRequest = {isSheetOpen = false}, sheetState = sheetState, modifier = Modifier.height(200.dp)) {
           Column(
               Modifier
                   .padding(16.dp)
-                  .fillMaxWidth()) {
+                  .fillMaxWidth()
+                  .fillMaxHeight(),
+              verticalArrangement = Arrangement.SpaceBetween
+            ) {
               TextField(
                   value = viewModel.newtask.value,
                   onValueChange = { viewModel.changeTask(it) },
@@ -117,6 +133,7 @@ fun HomeView() {
                       .clip(RoundedCornerShape(12.dp))) {
                     Text("Add item")
               }
+
           }
         }
     }

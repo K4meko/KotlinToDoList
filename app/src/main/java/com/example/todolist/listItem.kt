@@ -23,11 +23,12 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun ListItem(text: String) {
   Row(
-      modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.Center),
-      horizontalArrangement = Arrangement.Center,
+      modifier = Modifier.wrapContentSize(Alignment.Center),
+      horizontalArrangement = Arrangement.Start,
       verticalAlignment = Alignment.CenterVertically
   ){
       val checkedState = remember { mutableStateOf(false) }
+      //@State var neco:String
      Checkbox(checked = checkedState.value, onCheckedChange = { checkedState.value = it })
       Text(text = text)
   }
